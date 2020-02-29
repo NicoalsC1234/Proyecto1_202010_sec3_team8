@@ -1,12 +1,10 @@
 package model.data_structures;
 
-import java.util.Comparator;
-
 public class Cola<T> {
 
-	private Nodo primero; 
+	public Nodo<T> primero; 
 	
-	private Nodo ultimo;
+	public Nodo<T> ultimo;
 	
 	private int tamano;
 	
@@ -17,12 +15,12 @@ public class Cola<T> {
 		tamano = 0;
 	}
 	
-	public Nodo darPrimero()
+	public Nodo<T> darPrimero()
 	{
 		return primero;
 	}
 	
-	public Nodo darUltimo()
+	public Nodo<T> darUltimo()
 	{
 		return ultimo;
 	}
@@ -39,20 +37,16 @@ public class Cola<T> {
 
 	public T enqueue(T dato)
 	{
-		Nodo nuevo = new Nodo (dato);
+		Nodo<T> nuevo = new Nodo<T> (dato);
 		if(esVacio())
 		{
 			primero = nuevo;
-			ultimo = nuevo;
-			tamano++;
+			ultimo = primero;
+			tamano=1;
 		}
 		else 
-		{
-			if(tamano == 1) primero.setSiguiente(nuevo);
-			else {
-				ultimo.setSiguiente(nuevo);
-				}
-			
+		{			
+			ultimo.setSiguiente(nuevo);
 			ultimo = nuevo;
 			tamano ++;
 		}
@@ -60,9 +54,9 @@ public class Cola<T> {
 		return dato;
 	}
 	
-	public Nodo dequeue()
+	public Nodo<T> dequeue()
 	{
-		Nodo eliminar = primero;
+		Nodo<T> eliminar = primero;
 		if(tamano == 1)
 		{
 			primero = null;

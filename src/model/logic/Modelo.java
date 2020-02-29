@@ -24,19 +24,11 @@ import model.data_structures.Nodo;
  * Definicion del modelo del mundo
  *
  */
-public class Modelo <T> {
+public class Modelo {
 
 	public static String PATH = "./data/comparendos_dei_2018_small.geojson";
 
-	public int tamano = 0;
-
-	private Cola cola;
-
-	private Nodo nodo;
-
-	public T primero = null;
-
-	public T ultimo = null;
+	private Cola<Comparendo> cola;
 
 
 	public Modelo()
@@ -49,137 +41,136 @@ public class Modelo <T> {
 		return cola.darTamano();
 	}
 
-	public void enqueue(String dato)
+	public void enqueue(Comparendo dato)
 	{	
 		cola.enqueue(dato);
 	}
 
-	public Nodo darPrimero()
+	public Nodo<Comparendo> darPrimero()
 	{
 		return cola.darPrimero();
 	}
 
-	public Nodo darUltimo()
+	public Nodo<Comparendo> darUltimo()
 	{
 		return cola.darUltimo();
 	}
 
-	public Nodo dequeue()
+	public Nodo<Comparendo> dequeue()
 	{
 		return cola.dequeue();
 	}
 
 
-	public Cola cargarDatos() {
-
-		Cola datos = new Cola();
-
-		JsonReader reader;
-		try {
-			reader = new JsonReader(new FileReader(PATH));
-			JsonElement elem = JsonParser.parseReader(reader);
-			JsonArray e2 = elem.getAsJsonObject().get("features").getAsJsonArray();
+	public void cargarDatos() {
+		if(cola.esVacio()){
+			JsonReader reader;
+			try {
+				reader = new JsonReader(new FileReader(PATH));
+				JsonElement elem = JsonParser.parseReader(reader);
+				JsonArray e2 = elem.getAsJsonObject().get("features").getAsJsonArray();
 
 
-			SimpleDateFormat parser=new SimpleDateFormat("yyyy/MM/dd");
+				SimpleDateFormat parser=new SimpleDateFormat("yyyy/MM/dd");
 
-			for(JsonElement e: e2) {
-				Comparendo c = new Comparendo();
-				c.OBJECTID = e.getAsJsonObject().get("properties").getAsJsonObject().get("OBJECTID").getAsInt();
+				for(JsonElement e: e2) {
+					Comparendo c = new Comparendo();
+					c.OBJECTID = e.getAsJsonObject().get("properties").getAsJsonObject().get("OBJECTID").getAsInt();
 
-				String s = e.getAsJsonObject().get("properties").getAsJsonObject().get("FECHA_HORA").getAsString();	
-				c.FECHA_HORA = parser.parse(s); 
+					String s = e.getAsJsonObject().get("properties").getAsJsonObject().get("FECHA_HORA").getAsString();	
+					c.FECHA_HORA = parser.parse(s); 
 
-				c.MEDIO_DETE = e.getAsJsonObject().get("properties").getAsJsonObject().get("MEDIO_DETE").getAsString();
-				c.CLASE_VEHI = e.getAsJsonObject().get("properties").getAsJsonObject().get("CLASE_VEHI").getAsString();
-				c.TIPO_SERVI = e.getAsJsonObject().get("properties").getAsJsonObject().get("TIPO_SERVI").getAsString();
-				c.INFRACCION = e.getAsJsonObject().get("properties").getAsJsonObject().get("INFRACCION").getAsString();
-				c.DES_INFRAC = e.getAsJsonObject().get("properties").getAsJsonObject().get("DES_INFRAC").getAsString();	
-				c.LOCALIDAD = e.getAsJsonObject().get("properties").getAsJsonObject().get("LOCALIDAD").getAsString();
+					c.MEDIO_DETE = e.getAsJsonObject().get("properties").getAsJsonObject().get("MEDIO_DETE").getAsString();
+					c.CLASE_VEHI = e.getAsJsonObject().get("properties").getAsJsonObject().get("CLASE_VEHI").getAsString();
+					c.TIPO_SERVI = e.getAsJsonObject().get("properties").getAsJsonObject().get("TIPO_SERVI").getAsString();
+					c.INFRACCION = e.getAsJsonObject().get("properties").getAsJsonObject().get("INFRACCION").getAsString();
+					c.DES_INFRAC = e.getAsJsonObject().get("properties").getAsJsonObject().get("DES_INFRAC").getAsString();	
+					c.LOCALIDAD = e.getAsJsonObject().get("properties").getAsJsonObject().get("LOCALIDAD").getAsString();
 
-				c.longitud = e.getAsJsonObject().get("geometry").getAsJsonObject().get("coordinates").getAsJsonArray()
-						.get(0).getAsDouble();
+					c.longitud = e.getAsJsonObject().get("geometry").getAsJsonObject().get("coordinates").getAsJsonArray()
+							.get(0).getAsDouble();
 
-				c.latitud = e.getAsJsonObject().get("geometry").getAsJsonObject().get("coordinates").getAsJsonArray()
-						.get(1).getAsDouble();
+					c.latitud = e.getAsJsonObject().get("geometry").getAsJsonObject().get("coordinates").getAsJsonArray()
+							.get(1).getAsDouble();
 
-				datos.enqueue(c);
-				tamano = datos.darTamano();
-				primero = (T)datos.darPrimero();
-				ultimo = (T)datos.darUltimo();
+					enqueue(c);
+				}
 			}
 
-		} catch (FileNotFoundException | ParseException e) {
-			e.printStackTrace();
-		}
-		return datos;	
+			catch (FileNotFoundException | ParseException e) {
+				e.printStackTrace();
+			}
 
+		}
+		
 	}
 
 	public double[] darMinimax()
 	{
 		double[] mini = new double[4];
-		
-		if(!cola.esVacio())
-		{
 
-			for (int i = 0; i < cola.darTamano(); i++) {
-				Comparendo es = (Comparendo) getObj(i);
-				double lo1 = es.longitud;
-				double la1 = es.latitud;
-				double lo2 = es.longitud;
-				double la2 = es.latitud;
-				if(es.longitud > lo1)
-					{
-						lo1 = es.longitud;
-						mini[0] = lo1;
-					}
-				if(es.longitud < lo2){
-					mini[1] = lo2;
-					lo2 = es.longitud;
-				}
-				if(es.latitud > la1)
-					{
-						la1 = es.latitud;
-						mini[2] = la1;
-					}
-				if(es.latitud < la2){
-					mini[3] = la2;
-					la2 = es.latitud;
-				}
+		Nodo<Comparendo> es = cola.primero;
+		double lo1 = es.getActual().longitud;
+		double la1 = es.getActual().latitud;
+		double lo2 = es.getActual().longitud;
+		double la2 = es.getActual().latitud;
+		while(es!=null){
+			if(es.getActual().longitud > lo1)
+			{
+				lo1 = es.getActual().longitud;
+				mini[0] = lo1;
 			}
+			else if(es.getActual().longitud < lo2){
+				mini[1] = lo2;
+				lo2 = es.getActual().longitud;
+			}
+			if(es.getActual().latitud > la1)
+			{
+				la1 = es.getActual().latitud;
+				mini[2] = la1;
+			}
+			else if(es.getActual().latitud < la2){
+				mini[3] = la2;
+				la2 = es.getActual().latitud;
+			}
+			es = es.getSiguiente();
 		}
 		return mini;
 	}
 
-	public Comparendo MostrarCompMayorOBJECTID()
-	{
-		Comparendo mayor = null;
-		int numMayor = 0;
-		if (!cola.esVacio())
-		{
-			for (int i = 0; i < cola.darTamano(); i++) {
-				Comparendo es = (Comparendo) getObj(i);
-				if(es.OBJECTID > mayor.OBJECTID)
-				{
-					mayor = es;
-				}
-			}
-		}
-		return mayor;
-	}
+	
 
-	public T getObj(int index)
-	{
-		int contador = 0;
-		Nodo n = (Nodo) primero;
-		while(contador < index)
-		{
-			n = n.getSiguiente();
-			contador++;
+
+public Comparendo MostrarCompMayorOBJECTID()
+{
+	Comparendo mayor = null;
+	int idMayor = 0;
+	
+		Nodo<Comparendo> es = darPrimero();
+		while(es!=null) {
+			if(es.getActual().OBJECTID>idMayor) {
+				idMayor = es.getActual().OBJECTID;
+				mayor = es.getActual();
+			}
+			es = es.getSiguiente();
 		}
-		return (T) n.getActual();
+
+	
+	return mayor;
+}
+
+public Comparendo buscarPorLocalidad(String Localidad)
+{
+
+	Nodo<Comparendo> es = darPrimero();
+	while(es != null)
+	{
+		if(es.getActual().LOCALIDAD.equalsIgnoreCase(Localidad)) return es.getActual();
+		es = es.getSiguiente();
 	}
+	return null;
+}
+
 }
 
 

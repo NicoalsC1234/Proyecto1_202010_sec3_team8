@@ -6,7 +6,7 @@ public class Nodo <T> {
 
 	private T actual;
 
-	private Nodo siguiente;
+	private Nodo<T> siguiente;
 
 	public Nodo(T dato)
 	{
@@ -22,11 +22,11 @@ public class Nodo <T> {
 		this.actual = actual;
 	}
 
-	public Nodo getSiguiente() {
+	public Nodo<T> getSiguiente() {
 		return siguiente;
 	}
 
-	public void setSiguiente(Nodo siguiente) {
+	public void setSiguiente(Nodo<T> siguiente) {
 		this.siguiente = siguiente;
 	}
 
