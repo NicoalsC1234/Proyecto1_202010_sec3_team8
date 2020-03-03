@@ -16,6 +16,8 @@ public class View
 		{
 			System.out.println("1. Crear estructura de datos");
 			System.out.println("2. Consultar por localidad");
+			System.out.println("3. Consultar datos por fecha");
+			System.out.println("5: Consultar por infraccion");
 			
 		}
 
