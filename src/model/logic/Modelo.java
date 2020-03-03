@@ -217,10 +217,33 @@ public class Modelo {
 	}
 
 	// Parte 3A
-	public String compararPorCodigoInfraccion(String FECHA1, String FECHA2)
+	public void compararPorCodigoInfraccion()
 	{
-		
-
+		String mandar = " \n Infracción | Particular | Público";
+		Comparendo[] hola = new Comparendo[cola.darTamano()];
+		Nodo<Comparendo> es = cola.primero;
+		for (int i = 0; i < cola.darTamano(); i++) {
+			hola[i] = es.getActual();
+			es = es.getSiguiente();
+		}
+		Merge.sort(hola);
+		//ORDENAMIENTO POR ORDEN ALFABETICO DE LAS INFRACCIONES
+		int contadorPu = 0;
+		int contadorPri = 0;
+		String cca = hola[0].INFRACCION;
+		for (int i = 0; i < hola.length; i++) {
+			if(hola[i].equals(cca)){
+				contadorPu ++;
+				contadorPri ++;
+			}
+			else 
+			{
+				mandar = "\n" + cca + "| " +contadorPu + "|"+ contadorPri;
+				cca = hola[i].INFRACCION;
+				contadorPu = 0;
+				contadorPri = 0;
+			}
+		}
 	}
 
 	// Parte 1B
@@ -269,16 +292,36 @@ public class Modelo {
 	// Parte 3B 
 	public void compararPorServi()
 	{
-
+		String mandar = " \n Infracción | Particular | Público";
+		Comparendo[] hola = new Comparendo[cola.darTamano()];
+		Nodo<Comparendo> es = cola.primero;
+		for (int i = 0; i < cola.darTamano(); i++) {
+			hola[i] = es.getActual();
+			es = es.getSiguiente();
+		}
+		Merge.sort(hola);
+		//ORDENAMIENTO POR ORDEN ALFABETICO DE LAS INFRACCIONES
+		int contadorPu = 0;
+		int contadorPri = 0;
+		String cca = hola[0].INFRACCION;
+		for (int i = 0; i < hola.length; i++) {
+			if(hola[i].equals(cca)){
+				contadorPu ++;
+				contadorPri ++;
+			}
+			else 
+			{
+				mandar = "\n" + cca + "| " +contadorPu + "|"+ contadorPri;
+				cca = hola[i].INFRACCION;
+				contadorPu = 0;
+				contadorPri = 0;
+			}
+		}
 
 	}
-
-
-
-
-
+	
+	
 	// Parte 1C
-
 	public String mostrarCompInfLoc(String localidad, Date inicial, Date fechaFinal)
 	{
 		String mandar = "";
@@ -343,56 +386,37 @@ public class Modelo {
 			es = es.getSiguiente();
 		}
 
-		String[] copiaComp = new String[cola.darTamano()];
+		String [] copia = new String[porLocalidad.darTamano()]; 
 		Nodo<Comparendo> s = porLocalidad.primero;
 
 		for(int i = 0; i < porLocalidad.darTamano(); i++)
 		{
 
-			copiaComp[i] = s.getActual();
+			copia[i] = s.getActual().INFRACCION;
 			s = s.getSiguiente();
 		}
 		//ORDENAMIENTO SEGUN POR INFRACCION
-		Merge.sort(copiaComp);
-		String cca = copiaComp[0];
+		Merge.sort(copia);
+		String[] acc = new String[n];
+		String cca = copia[0];
 		int contador = 0;
-		for (int i = 1; i < copiaComp.length; i++) {
+		for (int i = 1; i < copia.length; i++) {
 			
-			if(copiaComp[i].equals(n)){
+			if(copia[i].equals(n)){
 				
 				contador ++;
 			}
 			else 
 			{
-
+				acc[i] = "\n" + cca + "      | " +contador;
+				for (int j = 0; j < acc.length; j++) {
+					//ORDENAMIENTO POR DATOS MAS ALTOS
+					
+				}
+				acc[] = "\n" + cca + "      | " +contador;
 			}
 		}
 	}
 
-//	public static class Comparador{
-//		public static Comparator<String> strings=
-//				(i1, i2) -> i1.compareTo(i2);
-//				public static Comparator<Comparendo> dates=
-//						(i1, i2) -> i1.FECHA_HORA.compareTo(i2.FECHA_HORA);
-//						public static Comparator<Comparendo> infraccion=
-//								(i1, i2) -> i1.INFRACCION.compareTo(i2.INFRACCION);
-
-	//							public static Comparator<Comparendo> infraccionAlReves=
-	//									(i1, i2) -> i2.INFRACCION.compareTo(i1.INFRACCION);
-	//}
-
-
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
